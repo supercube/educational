@@ -1,6 +1,6 @@
 package POO_BBS;
 
-public class POOBoard {
+public class POOBoard extends Entry {
 	private String Name;
 	private POOArticle[] Articles;
 	private int Article_count;
@@ -8,6 +8,7 @@ public class POOBoard {
 	
 	
 	public POOBoard(String name){
+		super(Entry.TYPE.BOARD);
 		this.Name = name;
 		Articles = new POOArticle[MAXART];
 		for(int i = 0; i < MAXART; i++)
@@ -59,5 +60,9 @@ public class POOBoard {
 		System.out.println("Eval\tID\tTitle\tAuthor");
 		for(int i = 0; i < Article_count; i++)
 			Articles[i].list();
+	}
+	
+	public String getTitle(){
+		return Name;
 	}
 }

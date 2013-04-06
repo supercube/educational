@@ -1,6 +1,6 @@
 package POO_BBS;
 
-public class POOArticle {
+public class POOArticle extends Entry{
 	private int ID;
 	private String title;
 	private String author;
@@ -14,6 +14,7 @@ public class POOArticle {
 	
 	
 	public POOArticle(int id, String title, String author, String content){
+		super(Entry.TYPE.ARTICLE);
 		this.ID = id;
 		this.title = title;
 		this.author = author;
@@ -90,4 +91,7 @@ public class POOArticle {
 		System.out.println(evaluation_count + "\t" + ID + "\t" + title + "\t" + author);
 	}
 	
+	public String getTitle(){
+		return title;
+	}
 }
