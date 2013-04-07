@@ -11,7 +11,7 @@ public class Entry {
 		return Type;
 	}
 	
-	public String getTitle(){
-		return null;
-	}
+	public String getTitle(){return null;}
+	public int length(){return 0;}
+	public void show(){}
 }

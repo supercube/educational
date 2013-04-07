@@ -58,7 +58,7 @@ public class POOBoard extends Entry {
 	public void show(){
 		System.out.println();
 		System.out.println("****************************************************************************************");
-		System.out.println("Board\t: " + Name);
+		System.out.println("Board " + Name + ", " + Article_count + " items");
 		System.out.println("----------------------------------------------------------------------------------------");
 		System.out.println("Eval\tID\tTitle\tAuthor");
 		for(int i = 0; i < Article_count; i++)
