@@ -59,9 +59,11 @@ public class POOArticle extends Entry{
 	
 	public void show(){
 		String ID = String.format("%03d", this.ID);
-		System.out.println("Author:\t" + author);
-		System.out.println("Title:\t" + title);
-		System.out.println("Info:\t" + "ID " + ID + ", Evaluation " + evaluation_count);
+		System.out.println();
+		System.out.println("****************************************************************************************");
+		System.out.println("Author\t: " + author);
+		System.out.println("Title\t: " + title);
+		System.out.println("Info\t: " + "ID " + ID + ", Evaluation " + evaluation_count);
 		System.out.println("----------------------------------------------------------------------------------------");
 		System.out.println(content);
 		System.out.println("----------------------------------------------------------------------------------------");
@@ -81,9 +83,10 @@ public class POOArticle extends Entry{
 					eval = "Error";
 					break;
 			}
-			System.out.println(eval + "\t" + evaluation_messages[i]);
+			System.out.println(eval + "\t: " + evaluation_messages[i]);
 		}
-		
+		System.out.println("****************************************************************************************");
+		System.out.println();
 	}
 	
 	public void list(){

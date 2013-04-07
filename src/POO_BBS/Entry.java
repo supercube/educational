@@ -12,6 +12,6 @@ public class Entry {
 	}
 	
 	public String getTitle(){
-		return "None";
+		return null;
 	}
 }

@@ -1,6 +1,6 @@
 package POO_BBS;
 
-public class POODirectory {
+public class POODirectory extends Entry{
 	private String Name;
 	private Entry[] Entries;
 	private int Entry_count;
@@ -8,6 +8,7 @@ public class POODirectory {
 	
 	
 	public POODirectory(String name){
+		super(Entry.TYPE.DIRECTORY);
 		this.Name = name;
 		Entry_count = 0;
 		Entries = new Entry[MAXENTRY];
@@ -29,6 +30,15 @@ public class POODirectory {
 			return false;
 		
 		Entries[Entry_count] = article;
+		Entry_count++;
+		return true;
+	}
+	
+	public boolean add(POODirectory dir){
+		if(Entry_count >= MAXENTRY)
+			return false;
+		
+		Entries[Entry_count] = dir;
 		Entry_count++;
 		return true;
 	}

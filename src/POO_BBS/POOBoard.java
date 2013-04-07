@@ -38,17 +38,14 @@ public class POOBoard extends Entry {
 		if(src >= MAXART || dest >= MAXART)
 			return false;
 		
-		POOArticle tmp = Articles[dest];
-		Articles[dest] = Articles[src];
-		Articles[src] = tmp;
-		
-		if(Articles[src] == null){
-			for(int i = src + 1; i <= dest; i++){
-				Articles[i-1] = Articles[i];
-				if(Articles[i] == null)
-					break;
-			}
+		int i;
+		POOArticle tmp = Articles[src];
+		for(i = src + 1; i <= dest; i++){
+			Articles[i-1] = Articles[i];
+			if(Articles[i] == null)
+				break;
 		}
+		Articles[i-1] = tmp;
 		return true;
 	}
 	
