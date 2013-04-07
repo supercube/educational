@@ -26,10 +26,12 @@ public class POOBoard extends Entry {
 	}
 	
 	public boolean del(int pos){
-		if(pos >= MAXART || Articles[pos] == null)
+		if(pos >= Article_count)
 			return false;
 		
-		Articles[pos] = null;
+		for(int i = pos + 1; i < Article_count; i++){
+			Articles[i-1] = Articles[i]; 
+		}
 		Article_count--;
 		return true;
 	}
@@ -54,9 +56,15 @@ public class POOBoard extends Entry {
 	}
 	
 	public void show(){
+		System.out.println();
+		System.out.println("****************************************************************************************");
+		System.out.println("Board\t: " + Name);
+		System.out.println("----------------------------------------------------------------------------------------");
 		System.out.println("Eval\tID\tTitle\tAuthor");
 		for(int i = 0; i < Article_count; i++)
 			Articles[i].list();
+		System.out.println("****************************************************************************************");
+		System.out.println();
 	}
 	
 	public String getTitle(){

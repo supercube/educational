@@ -43,11 +43,56 @@ public class POODirectory extends Entry{
 		return true;
 	}
 	
+	public boolean add_split(){
+		if(Entry_count >= MAXENTRY)
+			return false;
+		
+		SplittingLine spline = new SplittingLine(); 
+		Entries[Entry_count] = spline;
+		Entry_count++;
+		return true;
+	}
+	
+	public boolean del(int pos){
+		if(pos >= Entry_count)
+			return false;
+		
+		for(int i = pos + 1; i < Entry_count; i++){
+			Entries[i-1] = Entries[i];
+		}
+		Entry_count--;
+		return true;
+	}
+	
+	public boolean move(int src, int dest){
+		if(src >= MAXENTRY || dest >= MAXENTRY)
+			return false;
+		
+		int i;
+		Entry tmp = Entries[src];
+		for(i = src + 1; i <= dest; i++){
+			Entries[i-1] = Entries[i];
+			if(Entries[i] == null)
+				break;
+		}
+		Entries[i-1] = tmp;
+		return true;
+	}
+	
+	public int length(){
+		return Entry_count;
+	}
+	
 	public void show(){
+		System.out.println();
+		System.out.println("****************************************************************************************");
+		System.out.println("Directory\t: " + Name);
+		System.out.println("----------------------------------------------------------------------------------------");
 		for(int i = 0; i < Entry_count; i++){
 			System.out.println(Entries[i].getTitle());
 		}
-		
+		System.out.println("****************************************************************************************");
+		System.out.println();
 	}
 	
 	public String getTitle(){

@@ -19,6 +19,7 @@ public class Demo {
 		art1.show();
 		dir1.add(board1);
 		dir1.add(art1);
+		dir1.add_split();
 		dir1.add(dir2);
 		dir1.show();
 	}
