@@ -60,14 +60,14 @@ public class POOBoard extends Entry {
 		return Articles[pos];
 	}
 	
-	public int get(String title){
+	public Entry get(String title){
 
 		for(int i = 0; i < Article_count; i++){
 			if(title.equals(Articles[i].getTitle())){
-				return i;
+				return Articles[i];
 			}
 		}
-		return -1;
+		return null;
 	}
 	
 	public boolean del(int pos){

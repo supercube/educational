@@ -11,12 +11,12 @@ public class Demo {
 		history[0] = home;
 		int current;
 		boolean exit;
-		
 		while(true){
-			exit = false;
-			current = 0;
+			
 			System.out.print("Please enter your username: ");
 			user.setUserName(input.nextLine());
+			exit = false;
+			current = 0;
 			boolean help = false;
 			while(!exit){
 				/* print path and current */
@@ -50,7 +50,6 @@ public class Demo {
 				String content;
 				int src, dest;
 				while(!correct){
-					
 					/* printInfo */
 					if(help){
 						switch(type){
@@ -70,9 +69,13 @@ public class Demo {
 						help = false;
 					}
 					/* parse input */
+					String cmd = input.nextLine();
+					String[] cmds = cmd.split(" ");
 					correct = true;
-					String tmp = input.nextLine();
-					switch(tmp){
+					String[] path;
+					int search;
+					boolean back;
+					switch(cmds[0]){
 						case "h":
 						case "H":
 						case "help":
@@ -94,10 +97,15 @@ public class Demo {
 								correct = false;
 								break;
 							}
-							System.out.print("Title\t: ");
-							title = input.nextLine();
-							System.out.print("Content\t: ");
-							content = input.nextLine();
+							if(cmds.length != 3){
+								System.out.print("Title\t: ");
+								title = input.nextLine();
+								System.out.print("Content\t: ");
+								content = input.nextLine();
+							}else{
+								title = new String(cmds[1]);
+								content = new String(cmds[2]);
+							}
 							POOArticle art = new POOArticle(history[current].length(), title, user.getUserName(), content);
 							correct = ((POOBoard)history[current]).add(art);
 							break;
@@ -107,8 +115,13 @@ public class Demo {
 								correct = false;
 								break;
 							}
-							System.out.print("Board Name\t: ");
-							title = input.nextLine();
+							
+							if(cmds.length != 2){
+								System.out.print("Board Name\t: ");
+								title = input.nextLine();
+							}else{
+								title = new String(cmds[1]);
+							}
 							POOBoard brd = new POOBoard(title);
 							correct = ((POODirectory)history[current]).add(brd);
 							break;
@@ -119,8 +132,12 @@ public class Demo {
 								break;
 							}
 								
-							System.out.print("Directory Name\t: ");
-							title = input.nextLine();
+							if(cmds.length != 2){
+								System.out.print("Directory Name\t: ");
+								title = input.nextLine();
+							}else{
+								title = new String(cmds[1]);
+							}
 							POODirectory dir = new POODirectory(title);
 							correct = ((POODirectory)history[current]).add(dir);
 							break;
@@ -131,11 +148,16 @@ public class Demo {
 								break;
 							}
 							
-							System.out.print("source\t\t: ");
-							src = input.nextInt();
-							System.out.print("destination\t: ");
-							dest = input.nextInt();
-							input.nextLine();
+							if(cmds.length != 3){
+								System.out.print("source\t\t: ");
+								src = input.nextInt();
+								System.out.print("destination\t: ");
+								dest = input.nextInt();
+								input.nextLine();
+							}else{
+								src = Integer.parseInt(cmds[1]);
+								dest = Integer.parseInt(cmds[2]);
+							}
 							correct = ((POOBoard)history[current]).addEssence(src, dest);
 							break;
 						case "f":
@@ -145,9 +167,13 @@ public class Demo {
 								break;
 							}
 							
-							System.out.print("destination: ");
-							dest = input.nextInt();
-							input.nextLine();
+							if(cmds.length != 2){
+								System.out.print("destination: ");
+								dest = input.nextInt();
+								input.nextLine();
+							}else{
+								dest = Integer.parseInt(cmds[1]);
+							}
 							correct = ((POOBoard)history[current]).focus(dest);
 							break;
 						case "s":
@@ -164,50 +190,117 @@ public class Demo {
 								correct = false;
 								break;
 							}
-							System.out.print("destination\t: ");
-							dest = input.nextInt();
-							input.nextLine();
+							
+							if(cmds.length != 2){
+								System.out.print("destination\t: ");
+								dest = input.nextInt();
+								input.nextLine();
+							}else{
+								dest = Integer.parseInt(cmds[1]);
+							}
 							if(type == Entry.TYPE.DIRECTORY){
 								correct = ((POODirectory)history[current]).del(dest);
 							}else{
 								correct = ((POOBoard)history[current]).del(dest);
 							}
 							break;
-						case "g":
-						case "G":
-							if((type != Entry.TYPE.DIRECTORY && type != Entry.TYPE.BOARD) || current + 1 >= 1024){
-								correct = false;
-								break;
-							}
-							System.out.print("destination\t: ");
-							dest = input.nextInt();
-							input.nextLine();
-							if(type == Entry.TYPE.DIRECTORY){
-								history[current+1] = ((POODirectory)history[current]).get(dest);
+							
+						case "cd":
+							if(cmds.length != 2){
+								System.out.print("path: ");
+								content = input.nextLine();
 							}else{
-								history[current+1] = ((POOBoard)history[current]).get(dest);
+								content = new String(cmds[1]);
 							}
-							if(history[current+1] == null){
-								correct = false;
+							path = content.split("/");
+							search = current;
+							Entry[] newpath = new Entry[1024];
+							back = false;
+							int backpoint = search;
+							for(int i = 0; i < path.length; i++){
+								switch(path[i]){
+									case ".":
+										break;
+									case "..":
+										if(search <= 0 || back){
+											correct = false;
+											break;
+										}
+										search--;
+										backpoint--;
+										break;
+									default:
+										if(!back){
+											if(search >= 1024 || history[search] == null){
+												correct = false;
+												break;
+											}else if(history[search].getType() == Entry.TYPE.BOARD){
+												newpath[search+1] = ((POOBoard)history[search]).get(path[i]);
+												if(newpath[search+1] == null){
+													correct = false;
+													break;
+												}
+												search++;
+											}else if(history[search].getType() == Entry.TYPE.DIRECTORY){
+												back = true;
+												backpoint = search;
+												newpath[search+1] = ((POODirectory)history[search]).get(path[i]);
+												if(newpath[search+1] == null){
+													correct = false;
+													break;
+												}
+												search++;
+											}else{
+												correct = false;
+												break;
+											}
+										}else{
+											if(search >= 1024 || newpath[search] == null){
+												correct = false;
+												break;
+											}else if(newpath[search].getType() == Entry.TYPE.BOARD){
+												if((newpath[search+1] =(Entry)((POOBoard)newpath[search]).get(path[i])) == null){
+													correct = false;
+												}
+												search++;
+											}else if(newpath[search].getType() == Entry.TYPE.DIRECTORY){
+												newpath[search+1] = ((POODirectory)newpath[search]).get(path[i]);
+												search++;
+											}else{
+												correct = false;
+												break;
+											}
+										}
+										break;
+								}
+								if(!correct)
+									break;
+							}
+							if(!correct)
 								break;
+							
+							for(int i = backpoint + 1; i <= search; i++){
+								history[i] = newpath[i];
 							}
-							if(history[current+1].getType() != Entry.TYPE.DIRECTORY && history[current+1].getType() != Entry.TYPE.BOARD && history[current+1].getType() != Entry.TYPE.ARTICLE){
-								correct = false;
-								break;
-							}
-							current++;
+							current = search;
 							break;
+							
 						case "m":
 						case "M":
 							if(type != Entry.TYPE.BOARD && type != Entry.TYPE.DIRECTORY){
 								correct = false;
 								break;
 							}
-							System.out.print("source\t\t: ");
-							src = input.nextInt();
-							System.out.print("destination\t: ");
-							dest = input.nextInt();
-							input.nextLine();
+							if(cmds.length != 3){
+								System.out.print("source(pos)\t: ");
+								src = input.nextInt();
+								System.out.print("destination\t: ");
+								dest = input.nextInt();
+								input.nextLine();
+							}else{
+								src = Integer.parseInt(cmds[1]);
+								dest = Integer.parseInt(cmds[2]);
+							}
 							if(type == Entry.TYPE.BOARD){
 								correct = ((POOBoard)history[current]).move(src, dest);
 							}else{
@@ -221,15 +314,19 @@ public class Demo {
 								break;
 							}
 							
-							System.out.print("source(pos number)\t: ");
-							src = input.nextInt();
-							input.nextLine();
-							System.out.print("destination(path)\t: ");
-							content = input.nextLine();
-							String[] path = content.split("/");
-							int search = current;
-							int found = -1;
-							boolean back = false;
+							if(cmds.length != 3){
+								System.out.print("source(pos number)\t: ");
+								src = input.nextInt();
+								input.nextLine();
+								System.out.print("destination(path)\t: ");
+								content = input.nextLine();
+							}else{
+								src = Integer.parseInt(cmds[1]);
+								content = new String(cmds[2]);
+							}
+							path = content.split("/");
+							search = current;
+							back = false;
 							Entry unknown_entry = null;
 							for(int i = 0; i < path.length; i++){
 								switch(path[i]){
@@ -245,9 +342,7 @@ public class Demo {
 									default:
 										if(!back){
 											if(history[search].getType() == Entry.TYPE.BOARD){
-												if((found = ((POOBoard)history[search]).get(path[i])) != -1){
-													correct = false;
-												}
+												correct = false;
 											}else if(history[search].getType() == Entry.TYPE.DIRECTORY){
 												back = true;
 												unknown_entry = ((POODirectory)history[search]).get(path[i]);
@@ -259,9 +354,7 @@ public class Demo {
 											if(unknown_entry == null){
 												break;
 											}else if(unknown_entry.getType() == Entry.TYPE.BOARD){
-												if((found = ((POOBoard)unknown_entry).get(path[i])) != -1){
 													correct = false;
-												}
 											}else if(unknown_entry.getType() == Entry.TYPE.DIRECTORY){
 												unknown_entry = ((POODirectory)unknown_entry).get(path[i]);
 											}else{
@@ -273,9 +366,9 @@ public class Demo {
 								}
 								if(!correct)
 									break;
-								if(found != -1)
-									break;
 							}
+							if(!correct)
+								break;
 							int id = ((POOBoard)unknown_entry).length();
 							POOArticle art2 = (POOArticle)((POOBoard)history[current]).get(src);
 							((POOBoard)unknown_entry).transcript(id, art2);
@@ -299,8 +392,12 @@ public class Demo {
 								correct = false;
 								break;
 							}
-							System.out.print("Content\t: ");
-							content = input.nextLine();
+							if(cmds.length != 2){
+								System.out.print("Content\t: ");
+								content = input.nextLine();
+							}else{
+								content = new String(cmds[1]);
+							}
 							correct = ((POOArticle)history[current]).arrow(content);
 							break;
 						case "boo":
@@ -309,8 +406,12 @@ public class Demo {
 								correct = false;
 								break;
 							}
-							System.out.print("Content\t: ");
-							content = input.nextLine();
+							if(cmds.length != 2){
+								System.out.print("Content\t: ");
+								content = input.nextLine();
+							}else{
+								content = new String(cmds[1]);
+							}
 							correct = ((POOArticle)history[current]).boo(content);
 							break;
 						case "push":
@@ -319,8 +420,12 @@ public class Demo {
 								correct = false;
 								break;
 							}
-							System.out.print("Content\t: ");
-							content = input.nextLine();
+							if(cmds.length != 2){
+								System.out.print("Content\t: ");
+								content = input.nextLine();
+							}else{
+								content = new String(cmds[1]);
+							}
 							correct = ((POOArticle)history[current]).push(content);
 							break;
 						default:
