@@ -32,13 +32,13 @@ public class Demo {
 					/* printInfo */
 					switch(type){
 						case ARTICLE:
-							System.out.print("r)Return e)Exit :");
+							System.out.print("(arrow)Arrow (boo)Boo (push)Push (r)Return (e)Exit :");
 							break;
 						case BOARD:
-							System.out.print("a)Add a article r)Return g)Goto m)Move e)Exit:");
+							System.out.print("(a)Add a article (delete)Delete (r)Return (g)Goto (m)Move (e)Exit:");
 							break;
 						case DIRECTORY:
-							System.out.print("a)Add a article b)Add a board d)Add a directory g)Goto m)Move r)Return e)Exit:");
+							System.out.print("a)Add a article (b)Add a board (d)Add a directory (delete)Delete (g)Goto (m)Move (r)Return e)Exit:");
 							break;
 						default:
 							System.out.println("Error Type");
@@ -96,6 +96,21 @@ public class Demo {
 							POODirectory dir = new POODirectory(title);
 							((POODirectory)history[current]).add(dir);
 							break;
+						case "delete":
+						case "Delete":
+							if(type != Entry.TYPE.DIRECTORY && type != Entry.TYPE.BOARD){
+								correct = false;
+								break;
+							}
+							System.out.print("destination\t: ");
+							dest = input.nextInt();
+							input.nextLine();
+							if(type == Entry.TYPE.DIRECTORY){
+								((POODirectory)history[current]).del(dest);
+							}else{
+								((POOBoard)history[current]).del(dest);
+							}
+							break;
 						case "g":
 						case "G":
 							if((type != Entry.TYPE.DIRECTORY && type != Entry.TYPE.BOARD) || current + 1 >= 1024){
@@ -109,6 +124,10 @@ public class Demo {
 								history[current+1] = ((POODirectory)history[current]).get(dest);
 							}else{
 								history[current+1] = ((POOBoard)history[current]).get(dest);
+							}
+							if(history[current+1] == null){
+								correct = false;
+								break;
 							}
 							if(history[current+1].getType() != Entry.TYPE.DIRECTORY && history[current+1].getType() != Entry.TYPE.BOARD && history[current+1].getType() != Entry.TYPE.ARTICLE){
 								correct = false;
@@ -130,6 +149,36 @@ public class Demo {
 							}else{
 								((POODirectory)history[current]).move(src, dest);
 							}
+							break;
+						case "arrow":
+						case "Arrow":
+							if(type != Entry.TYPE.ARTICLE){
+								correct = false;
+								break;
+							}
+							System.out.print("Content\t: ");
+							content = input.nextLine();
+							((POOArticle)history[current]).arrow(content);
+							break;
+						case "boo":
+						case "Boo":
+							if(type != Entry.TYPE.ARTICLE){
+								correct = false;
+								break;
+							}
+							System.out.print("Content\t: ");
+							content = input.nextLine();
+							((POOArticle)history[current]).boo(content);
+							break;
+						case "push":
+						case "Push":
+							if(type != Entry.TYPE.ARTICLE){
+								correct = false;
+								break;
+							}
+							System.out.print("Content\t: ");
+							content = input.nextLine();
+							((POOArticle)history[current]).push(content);
 							break;
 						default:
 							System.out.println("Error Command");
