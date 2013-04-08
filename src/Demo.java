@@ -35,10 +35,10 @@ public class Demo {
 							System.out.print("r)Return e)Exit :");
 							break;
 						case BOARD:
-							System.out.print("a)Add a article r)Return m)Move e)Exit:");
+							System.out.print("a)Add a article r)Return g)Goto m)Move e)Exit:");
 							break;
 						case DIRECTORY:
-							System.out.print("a)Add a article b)Add a board d)Add a directory m)Move r)Return e)Exit:");
+							System.out.print("a)Add a article b)Add a board d)Add a directory g)Goto m)Move r)Return e)Exit:");
 							break;
 						default:
 							System.out.println("Error Type");
@@ -75,8 +75,10 @@ public class Demo {
 							break;
 						case "b":
 						case "B":
-							if(type != Entry.TYPE.DIRECTORY)
+							if(type != Entry.TYPE.DIRECTORY){
 								correct = false;
+								break;
+							}
 							System.out.print("Board Name\t: ");
 							title = input.nextLine();
 							POOBoard brd = new POOBoard(title);
@@ -84,23 +86,36 @@ public class Demo {
 							break;
 						case "d":
 						case "D":
-							if(type != Entry.TYPE.DIRECTORY)
+							if(type != Entry.TYPE.DIRECTORY){
 								correct = false;
+								break;
+							}
+								
 							System.out.print("Directory Name\t: ");
 							title = input.nextLine();
 							POODirectory dir = new POODirectory(title);
 							((POODirectory)history[current]).add(dir);
 							break;
-						/*case "g":
+						case "g":
 						case "G":
-							if(type != Entry.TYPE.DIRECTORY)
+							if((type != Entry.TYPE.DIRECTORY && type != Entry.TYPE.BOARD) || current + 1 >= 1024){
 								correct = false;
+								break;
+							}
 							System.out.print("destination\t: ");
 							dest = input.nextInt();
 							input.nextLine();
-							current
-							history[current]).add(dir);
-							break;*/
+							if(type == Entry.TYPE.DIRECTORY){
+								history[current+1] = ((POODirectory)history[current]).get(dest);
+							}else{
+								history[current+1] = ((POOBoard)history[current]).get(dest);
+							}
+							if(history[current+1].getType() != Entry.TYPE.DIRECTORY && history[current+1].getType() != Entry.TYPE.BOARD && history[current+1].getType() != Entry.TYPE.ARTICLE){
+								correct = false;
+								break;
+							}
+							current++;
+							break;
 						case "m":
 						case "M":
 							if(type != Entry.TYPE.BOARD && type != Entry.TYPE.DIRECTORY)

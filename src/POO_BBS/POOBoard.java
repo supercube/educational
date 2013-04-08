@@ -25,8 +25,15 @@ public class POOBoard extends Entry {
 		return true;
 	}
 	
+	public Entry get(int pos){
+		if(pos >= Article_count || pos < 0)
+			return null;
+		
+		return Articles[pos];
+	}
+	
 	public boolean del(int pos){
-		if(pos >= Article_count)
+		if(pos >= Article_count || pos < 0)
 			return false;
 		
 		for(int i = pos + 1; i < Article_count; i++){
@@ -37,7 +44,7 @@ public class POOBoard extends Entry {
 	}
 		
 	public boolean move(int src, int dest){
-		if(src >= MAXART || dest >= MAXART)
+		if(src >= MAXART || dest >= MAXART || src < 0 || dest < 0)
 			return false;
 		
 		int i;

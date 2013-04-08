@@ -53,8 +53,15 @@ public class POODirectory extends Entry{
 		return true;
 	}
 	
+	public Entry get(int pos){
+		if(pos >= Entry_count || pos < 0)
+			return null;
+		
+		return Entries[pos];
+	}
+	
 	public boolean del(int pos){
-		if(pos >= Entry_count)
+		if(pos >= Entry_count || pos < 0)
 			return false;
 		
 		for(int i = pos + 1; i < Entry_count; i++){
@@ -65,7 +72,7 @@ public class POODirectory extends Entry{
 	}
 	
 	public boolean move(int src, int dest){
-		if(src >= MAXENTRY || dest >= MAXENTRY)
+		if(src >= MAXENTRY || dest >= MAXENTRY || src < 0 || dest < 0)
 			return false;
 		
 		int i;
