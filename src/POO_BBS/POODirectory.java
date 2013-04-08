@@ -86,9 +86,24 @@ public class POODirectory extends Entry{
 	public void show(){
 		System.out.println();
 		System.out.println("****************************************************************************************");
-		System.out.println("Article " + Name + ", " + Entry_count + " items");
+		System.out.println("Directory " + Name + ", " + Entry_count + " items");
 		System.out.println("----------------------------------------------------------------------------------------");
+		String pos;
 		for(int i = 0; i < Entry_count; i++){
+			pos = String.format("%03d ", i);
+			System.out.print(pos);
+			switch(Entries[i].getType()){
+				case ARTICLE:
+					System.out.print("Article\t");
+					break;
+				case BOARD:
+					System.out.print("Board\t");
+					break;
+				case DIRECTORY:
+					System.out.print("Directory\t");
+					break;
+				default:;
+			}
 			System.out.println(Entries[i].getTitle());
 		}
 		System.out.println("****************************************************************************************");

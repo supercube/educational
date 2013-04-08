@@ -3,23 +3,30 @@ import java.util.Scanner;
 public class Demo {
 	
 	public static void main(String[] args){
+		
 		Scanner input = new Scanner(System.in);
 		POODirectory home = new POODirectory("HomePage");
 		User user = new User();
 		Entry[] history = new Entry[1024];
 		history[0] = home;
-		int current = 0;
-		boolean exit = false;
+		int current;
+		boolean exit;
+		
 		while(true){
+			exit = false;
+			current = 0;
 			System.out.print("Please enter your username: ");
 			user.setUserName(input.nextLine());
 			
 			while(!exit){
 				history[current].show();
-				
+				//System.out.println(Integer.toString(current));
 				/* doCommand */
 				Entry.TYPE type = history[current].getType();
 				boolean correct = false;
+				String title;
+				String content;
+				int src, dest;
 				while(!correct){
 					
 					/* printInfo */
@@ -28,10 +35,10 @@ public class Demo {
 							System.out.print("r)Return e)Exit :");
 							break;
 						case BOARD:
-							System.out.print("a)Add a article r)Return e)Exit:");
+							System.out.print("a)Add a article r)Return m)Move e)Exit:");
 							break;
 						case DIRECTORY:
-							System.out.print("a)Add a article r)Return e)Exit:");
+							System.out.print("a)Add a article b)Add a board d)Add a directory m)Move r)Return e)Exit:");
 							break;
 						default:
 							System.out.println("Error Type");
@@ -55,8 +62,6 @@ public class Demo {
 						case "A":
 							if(type != Entry.TYPE.BOARD && type != Entry.TYPE.DIRECTORY)
 								correct = false;
-							String title;
-							String content;
 							System.out.print("Title\t: ");
 							title = input.nextLine();
 							System.out.print("Content\t: ");
@@ -66,6 +71,49 @@ public class Demo {
 								((POOBoard)history[current]).add(art);
 							}else{
 								((POODirectory)history[current]).add(art);
+							}
+							break;
+						case "b":
+						case "B":
+							if(type != Entry.TYPE.DIRECTORY)
+								correct = false;
+							System.out.print("Board Name\t: ");
+							title = input.nextLine();
+							POOBoard brd = new POOBoard(title);
+							((POODirectory)history[current]).add(brd);
+							break;
+						case "d":
+						case "D":
+							if(type != Entry.TYPE.DIRECTORY)
+								correct = false;
+							System.out.print("Directory Name\t: ");
+							title = input.nextLine();
+							POODirectory dir = new POODirectory(title);
+							((POODirectory)history[current]).add(dir);
+							break;
+						/*case "g":
+						case "G":
+							if(type != Entry.TYPE.DIRECTORY)
+								correct = false;
+							System.out.print("destination\t: ");
+							dest = input.nextInt();
+							input.nextLine();
+							current
+							history[current]).add(dir);
+							break;*/
+						case "m":
+						case "M":
+							if(type != Entry.TYPE.BOARD && type != Entry.TYPE.DIRECTORY)
+								correct = false;
+							System.out.print("source\t: ");
+							src = input.nextInt();
+							System.out.print("destination\t: ");
+							dest = input.nextInt();
+							input.nextLine();
+							if(type == Entry.TYPE.BOARD){
+								((POOBoard)history[current]).move(src, dest);
+							}else{
+								((POODirectory)history[current]).move(src, dest);
 							}
 							break;
 						default:
