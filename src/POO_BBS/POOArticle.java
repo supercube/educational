@@ -60,13 +60,13 @@ public class POOArticle extends Entry{
 	public void show(){
 		String ID = String.format("%03d", this.ID);
 		System.out.println();
-		System.out.println("****************************************************************************************");
+		System.out.println("************************************************************************************************************");
 		System.out.println("Author\t: " + author);
 		System.out.println("Title\t: " + title);
 		System.out.println("Info\t: " + "ID " + ID + ", Evaluation " + evaluation_count);
-		System.out.println("----------------------------------------------------------------------------------------");
+		System.out.println("------------------------------------------------------------------------------------------------------------");
 		System.out.println(content);
-		System.out.println("----------------------------------------------------------------------------------------");
+		System.out.println("------------------------------------------------------------------------------------------------------------");
 		for(int i = 0; i < no_evaluation; i++){
 			String eval;
 			switch(evaluation_type[i]){
@@ -85,7 +85,7 @@ public class POOArticle extends Entry{
 			}
 			System.out.println(eval + "\t: " + evaluation_messages[i]);
 		}
-		System.out.println("****************************************************************************************");
+		System.out.println("************************************************************************************************************");
 		System.out.println();
 	}
 	

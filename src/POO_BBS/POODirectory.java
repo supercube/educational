@@ -25,15 +25,6 @@ public class POODirectory extends Entry{
 		return true;
 	}
 	
-	public boolean add(POOArticle article){
-		if(Entry_count >= MAXENTRY)
-			return false;
-		
-		Entries[Entry_count] = article;
-		Entry_count++;
-		return true;
-	}
-	
 	public boolean add(POODirectory dir){
 		if(Entry_count >= MAXENTRY)
 			return false;
@@ -101,9 +92,9 @@ public class POODirectory extends Entry{
 	
 	public void show(){
 		System.out.println();
-		System.out.println("****************************************************************************************");
+		System.out.println("************************************************************************************************************");
 		System.out.println("Directory " + Name + ", " + Entry_count + " items");
-		System.out.println("----------------------------------------------------------------------------------------");
+		System.out.println("------------------------------------------------------------------------------------------------------------");
 		String pos;
 		for(int i = 0; i < Entry_count; i++){
 			pos = String.format("%03d ", i);
@@ -122,7 +113,7 @@ public class POODirectory extends Entry{
 			}
 			System.out.println(Entries[i].getTitle());
 		}
-		System.out.println("****************************************************************************************");
+		System.out.println("************************************************************************************************************");
 		System.out.println();
 	}
 	

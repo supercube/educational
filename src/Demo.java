@@ -35,10 +35,10 @@ public class Demo {
 							System.out.print("(arrow)Arrow (boo)Boo (push)Push (r)Return (e)Exit :");
 							break;
 						case BOARD:
-							System.out.print("(a)Add a article (delete)Delete (r)Return (g)Goto (m)Move (e)Exit:");
+							System.out.print("(a)Add article (delete)Delete (r)Return (g)Goto (m)Move (z)Essence (e)Exit:");
 							break;
 						case DIRECTORY:
-							System.out.print("a)Add a article (b)Add a board (d)Add a directory (delete)Delete (g)Goto (m)Move (r)Return e)Exit:");
+							System.out.print("(b)Add board (d)Add directory (s)Add splitting line (delete)Delete (g)Goto (m)Move (r)Return e)Exit:");
 							break;
 						default:
 							System.out.println("Error Type");
@@ -60,18 +60,16 @@ public class Demo {
 							break;
 						case "a":
 						case "A":
-							if(type != Entry.TYPE.BOARD && type != Entry.TYPE.DIRECTORY)
+							if(type != Entry.TYPE.BOARD){
 								correct = false;
+								break;
+							}
 							System.out.print("Title\t: ");
 							title = input.nextLine();
 							System.out.print("Content\t: ");
 							content = input.nextLine();
 							POOArticle art = new POOArticle(history[current].length(), title, user.getUserName(), content);
-							if(type == Entry.TYPE.BOARD){
-								((POOBoard)history[current]).add(art);
-							}else{
-								((POODirectory)history[current]).add(art);
-							}
+							((POOBoard)history[current]).add(art);
 							break;
 						case "b":
 						case "B":
@@ -96,6 +94,14 @@ public class Demo {
 							POODirectory dir = new POODirectory(title);
 							((POODirectory)history[current]).add(dir);
 							break;
+						case "s":
+						case "S":
+							if(type != Entry.TYPE.DIRECTORY){
+								correct = false;
+								break;
+							}
+							((POODirectory)history[current]).add_split();
+							break;	
 						case "delete":
 						case "Delete":
 							if(type != Entry.TYPE.DIRECTORY && type != Entry.TYPE.BOARD){
@@ -186,32 +192,6 @@ public class Demo {
 					}
 				}
 			}
-			
-			/*while(!exit){
-				history[current].show();
-				doCommand(user, history, current, exit, input);
-			}*/
-		}/*
-		POOBoard board1 = new POOBoard("CF");
-		POOArticle art1 = new POOArticle(1, "Test", "LPJ", "This is a simple test.\nOnly test for Article and Board.\nThe third line.");
-		POOArticle art2 = new POOArticle(2, "Test2", "LPJ", "content is content");
-		POOArticle art3 = new POOArticle(3, "Test3", "LPJ", "this is empty");
-		POODirectory dir1 = new POODirectory("Favorite");
-		POODirectory dir2 = new POODirectory("SC2");
-		board1.add(art1);
-		board1.add(art2);
-		board1.add(art3);
-		board1.move(0,4);
-		art1.push("good");
-		art1.boo("bad");
-		art1.arrow("normal");
-		art1.boo("SFSB");
-		board1.show();
-		art1.show();
-		dir1.add(board1);
-		dir1.add(art1);
-		dir1.add_split();
-		dir1.add(dir2);
-		dir1.show();*/
+		}
 	}
 }

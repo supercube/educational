@@ -6,7 +6,7 @@ public class SplittingLine extends Entry{
 	
 	public SplittingLine(){
 		super(Entry.TYPE.SPLITTINGLINE);
-		Content = "----------------------------------------------------------------------------------------";
+		Content = "--------------------------------------------------------------------------------------------------------";
 	}
 	
 	public String getTitle(){
