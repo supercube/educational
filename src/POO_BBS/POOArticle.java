@@ -9,6 +9,7 @@ public class POOArticle extends Entry{
 	private int evaluation_count;
 	private String[] evaluation_messages;
 	private byte[] evaluation_type; /* 1:push, -1:boo, 0:arrow */
+	private boolean focused;
 	public static final int MAXEVAL = 1024;
 	
 	
@@ -23,6 +24,7 @@ public class POOArticle extends Entry{
 		evaluation_count = 0;
 		evaluation_messages = new String[MAXEVAL];
 		evaluation_type = new byte[MAXEVAL];
+		focused = false;
 	}
 	public POOArticle(int id){
 		super(Entry.TYPE.ARTICLE);
@@ -113,6 +115,8 @@ public class POOArticle extends Entry{
 	
 	public void list(){
 		String ID = String.format("%03d", this.ID);
+		if(focused)
+			System.out.print("m");
 		System.out.println(evaluation_count + "\t" + ID + "\t" + title + "\t" + author);
 	}
 	
@@ -120,11 +124,11 @@ public class POOArticle extends Entry{
 		return title;
 	}
 	
-	public String getContent(){
-		return content;
+	public void setFocused(){
+		focused = true;
 	}
 	
-	public String getAuthor(){
-		return author;
+	public void resetFocused(){
+		focused = false;
 	}
 }

@@ -51,6 +51,16 @@ public class POODirectory extends Entry{
 		return Entries[pos];
 	}
 	
+	public Entry get(String name){
+		for(int i = 0; i < Entry_count; i++){
+			if(name.equals(Entries[i].getTitle())){
+				return Entries[i];
+			}
+		}
+		
+		return null;
+	}
+	
 	public boolean del(int pos){
 		if(pos >= Entry_count || pos < 0)
 			return false;

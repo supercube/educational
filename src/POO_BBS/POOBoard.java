@@ -38,6 +38,15 @@ public class POOBoard extends Entry {
 		int id = brd.length();
 		POOArticle art = Articles[pos].clone(id);
 		brd.add(art);
+		Articles[pos].setFocused();
+		return true;
+	}
+	
+	public boolean focus(int pos){
+		if(pos >= Article_count || pos < 0)
+			return false;
+		
+		Articles[pos].setFocused();
 		return true;
 	}
 	
@@ -51,6 +60,16 @@ public class POOBoard extends Entry {
 		return Articles[pos];
 	}
 	
+	public int get(String title){
+
+		for(int i = 0; i < Article_count; i++){
+			if(title.equals(Articles[i].getTitle())){
+				return i;
+			}
+		}
+		return -1;
+	}
+	
 	public boolean del(int pos){
 		if(pos >= Article_count || pos < 0)
 			return false;
@@ -62,6 +81,13 @@ public class POOBoard extends Entry {
 		return true;
 	}
 		
+	public boolean transcript(int id, POOArticle art){
+		POOArticle art2 = art.clone(id);
+		if(art2 == null)
+			return false;
+		return this.add(art2);
+	}
+	
 	public boolean move(int src, int dest){
 		if(src >= MAXART || dest >= MAXART || src < 0 || dest < 0)
 			return false;

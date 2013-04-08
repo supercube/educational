@@ -17,10 +17,32 @@ public class Demo {
 			current = 0;
 			System.out.print("Please enter your username: ");
 			user.setUserName(input.nextLine());
-			
+			boolean help = false;
 			while(!exit){
+				/* print path and current */
 				history[current].show();
-				//System.out.println(Integer.toString(current));
+				for(int i = 0; i <= current; i++){
+					String left, right;
+					switch(history[i].getType()){
+						case ARTICLE:
+							left = "<";
+							right = ">";
+							break;
+						case BOARD:
+							left = "[";
+							right = "]";
+							break;
+						case DIRECTORY:
+							left = "{";
+							right = "}";
+							break;
+						default:
+							left = "(";
+							right = ")";
+					}
+					System.out.print(left + history[i].getTitle() + right + "/");
+				}
+				System.out.print("#> ");
 				/* doCommand */
 				Entry.TYPE type = history[current].getType();
 				boolean correct = false;
@@ -30,25 +52,33 @@ public class Demo {
 				while(!correct){
 					
 					/* printInfo */
-					switch(type){
-						case ARTICLE:
-							System.out.print("(Arrow) (Boo) (Push) (r)Return (Exit) :");
-							break;
-						case BOARD:
-							System.out.print("Add a (a)Article (e)Essence or (Delete) (r)Return (g)Goto (m)Move (z)EssenceRegion (Exit):");
-							break;
-						case DIRECTORY:
-							System.out.print("Add a (b)Board (d)Directory (s)Splitting line or (Delete) (g)Goto (m)Move (r)Return (Exit):");
-							break;
-						default:
-							System.out.println("Error Type");
-							break;
+					if(help){
+						switch(type){
+							case ARTICLE:
+								System.out.print("(Arrow) (Boo) (Push) (r)Return (Exit) :");
+								break;
+							case BOARD:
+								System.out.print("Add a (a)Article (e)Essence (f)Focus or (Delete) (r)Return (g)Goto (m)Move (t)Transcript (z)EssenceRegion (Exit):");
+								break;
+							case DIRECTORY:
+								System.out.print("Add a (b)Board (d)Directory (s)Splitting line or (Delete) (g)Goto (m)Move (r)Return (Exit):");
+								break;
+							default:
+								System.out.println("Error Type");
+								break;
+						}
+						help = false;
 					}
-					
 					/* parse input */
 					correct = true;
 					String tmp = input.nextLine();
 					switch(tmp){
+						case "h":
+						case "H":
+						case "help":
+						case "Help":
+							correct = false;
+							break;
 						case "r":
 						case "R":
 						if(current != 0)
@@ -69,7 +99,7 @@ public class Demo {
 							System.out.print("Content\t: ");
 							content = input.nextLine();
 							POOArticle art = new POOArticle(history[current].length(), title, user.getUserName(), content);
-							((POOBoard)history[current]).add(art);
+							correct = ((POOBoard)history[current]).add(art);
 							break;
 						case "b":
 						case "B":
@@ -80,7 +110,7 @@ public class Demo {
 							System.out.print("Board Name\t: ");
 							title = input.nextLine();
 							POOBoard brd = new POOBoard(title);
-							((POODirectory)history[current]).add(brd);
+							correct = ((POODirectory)history[current]).add(brd);
 							break;
 						case "d":
 						case "D":
@@ -92,7 +122,7 @@ public class Demo {
 							System.out.print("Directory Name\t: ");
 							title = input.nextLine();
 							POODirectory dir = new POODirectory(title);
-							((POODirectory)history[current]).add(dir);
+							correct = ((POODirectory)history[current]).add(dir);
 							break;
 						case "e":
 						case "E":
@@ -106,7 +136,19 @@ public class Demo {
 							System.out.print("destination\t: ");
 							dest = input.nextInt();
 							input.nextLine();
-							((POOBoard)history[current]).addEssence(src, dest);
+							correct = ((POOBoard)history[current]).addEssence(src, dest);
+							break;
+						case "f":
+						case "F":
+							if(type != Entry.TYPE.BOARD){
+								correct = false;
+								break;
+							}
+							
+							System.out.print("destination: ");
+							dest = input.nextInt();
+							input.nextLine();
+							correct = ((POOBoard)history[current]).focus(dest);
 							break;
 						case "s":
 						case "S":
@@ -114,7 +156,7 @@ public class Demo {
 								correct = false;
 								break;
 							}
-							((POODirectory)history[current]).add_split();
+							correct = ((POODirectory)history[current]).add_split();
 							break;	
 						case "delete":
 						case "Delete":
@@ -126,9 +168,9 @@ public class Demo {
 							dest = input.nextInt();
 							input.nextLine();
 							if(type == Entry.TYPE.DIRECTORY){
-								((POODirectory)history[current]).del(dest);
+								correct = ((POODirectory)history[current]).del(dest);
 							}else{
-								((POOBoard)history[current]).del(dest);
+								correct = ((POOBoard)history[current]).del(dest);
 							}
 							break;
 						case "g":
@@ -167,10 +209,76 @@ public class Demo {
 							dest = input.nextInt();
 							input.nextLine();
 							if(type == Entry.TYPE.BOARD){
-								((POOBoard)history[current]).move(src, dest);
+								correct = ((POOBoard)history[current]).move(src, dest);
 							}else{
-								((POODirectory)history[current]).move(src, dest);
+								correct = ((POODirectory)history[current]).move(src, dest);
 							}
+							break;
+						case "t":
+						case "T":
+							if(type != Entry.TYPE.BOARD && type != Entry.TYPE.DIRECTORY){
+								correct = false;
+								break;
+							}
+							
+							System.out.print("source(pos number)\t: ");
+							src = input.nextInt();
+							input.nextLine();
+							System.out.print("destination(path)\t: ");
+							content = input.nextLine();
+							String[] path = content.split("/");
+							int search = current;
+							int found = -1;
+							boolean back = false;
+							Entry unknown_entry = null;
+							for(int i = 0; i < path.length; i++){
+								switch(path[i]){
+									case ".":
+										break;
+									case "..":
+										if(search <= 0 || back){
+											correct = false;
+											break;
+										}
+										search--;
+										break;
+									default:
+										if(!back){
+											if(history[search].getType() == Entry.TYPE.BOARD){
+												if((found = ((POOBoard)history[search]).get(path[i])) != -1){
+													correct = false;
+												}
+											}else if(history[search].getType() == Entry.TYPE.DIRECTORY){
+												back = true;
+												unknown_entry = ((POODirectory)history[search]).get(path[i]);
+											}else{
+												correct = false;
+												break;
+											}
+										}else{
+											if(unknown_entry == null){
+												break;
+											}else if(unknown_entry.getType() == Entry.TYPE.BOARD){
+												if((found = ((POOBoard)unknown_entry).get(path[i])) != -1){
+													correct = false;
+												}
+											}else if(unknown_entry.getType() == Entry.TYPE.DIRECTORY){
+												unknown_entry = ((POODirectory)unknown_entry).get(path[i]);
+											}else{
+												correct = false;
+												break;
+											}
+										}
+										break;
+								}
+								if(!correct)
+									break;
+								if(found != -1)
+									break;
+							}
+							int id = ((POOBoard)unknown_entry).length();
+							POOArticle art2 = (POOArticle)((POOBoard)history[current]).get(src);
+							((POOBoard)unknown_entry).transcript(id, art2);
 							break;
 						case "z":
 						case "Z":
@@ -193,7 +301,7 @@ public class Demo {
 							}
 							System.out.print("Content\t: ");
 							content = input.nextLine();
-							((POOArticle)history[current]).arrow(content);
+							correct = ((POOArticle)history[current]).arrow(content);
 							break;
 						case "boo":
 						case "Boo":
@@ -203,7 +311,7 @@ public class Demo {
 							}
 							System.out.print("Content\t: ");
 							content = input.nextLine();
-							((POOArticle)history[current]).boo(content);
+							correct = ((POOArticle)history[current]).boo(content);
 							break;
 						case "push":
 						case "Push":
@@ -213,11 +321,14 @@ public class Demo {
 							}
 							System.out.print("Content\t: ");
 							content = input.nextLine();
-							((POOArticle)history[current]).push(content);
+							correct = ((POOArticle)history[current]).push(content);
 							break;
 						default:
 							System.out.println("No Such Command");
 							correct = false;
+					}
+					if(!correct){
+						help = true;
 					}
 				}
 			}
