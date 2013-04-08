@@ -49,12 +49,21 @@ public class POOBoard extends Entry {
 		
 		int i;
 		POOArticle tmp = Articles[src];
-		for(i = src + 1; i <= dest; i++){
-			Articles[i-1] = Articles[i];
-			if(Articles[i] == null)
-				break;
+		if(src <= dest){
+			for(i = src + 1; i <= dest; i++){
+				Articles[i-1] = Articles[i];
+				if(Articles[i] == null)
+					break;
+			}
+			Articles[i-1] = tmp;
+		}else{
+			for(i = src - 1; i >= dest; i--){
+				Articles[i+1] = Articles[i];
+				if(Articles[i] == null)
+					break;
+			}
+			Articles[i+1] = tmp;
 		}
-		Articles[i-1] = tmp;
 		return true;
 	}
 	

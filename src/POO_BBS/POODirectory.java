@@ -77,12 +77,21 @@ public class POODirectory extends Entry{
 		
 		int i;
 		Entry tmp = Entries[src];
-		for(i = src + 1; i <= dest; i++){
-			Entries[i-1] = Entries[i];
-			if(Entries[i] == null)
-				break;
+		if(src <= dest){
+			for(i = src + 1; i <= dest; i++){
+				Entries[i-1] = Entries[i];
+				if(Entries[i] == null)
+					break;
+			}
+			Entries[i-1] = tmp;
+		}else{
+			for(i = src - 1; i >= dest; i--){
+				Entries[i+1] = Entries[i];
+				if(Entries[i] == null)
+					break;
+			}
+			Entries[i+1] = tmp;
 		}
-		Entries[i-1] = tmp;
 		return true;
 	}
 	
