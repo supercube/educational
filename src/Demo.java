@@ -52,21 +52,36 @@ public class Demo {
 				while(!correct){
 					/* printInfo */
 					if(help){
+						System.out.println("Help");
+						System.out.println("------------------------------------------------------------------------------------------------------------");
 						switch(type){
 							case ARTICLE:
-								System.out.print("(Arrow) (Boo) (Push) (r)Return (Exit) :");
+								System.out.println("(Arrow) (Boo) (Push)");
 								break;
+								
 							case BOARD:
-								System.out.print("Add a (a)Article (e)Essence (f)Focus or (Delete) (r)Return (g)Goto (m)Move (t)Transcript (z)EssenceRegion (Exit):");
-								break;
 							case DIRECTORY:
-								System.out.print("Add a (b)Board (d)Directory (s)Splitting line or (Delete) (g)Goto (m)Move (r)Return (Exit):");
+								System.out.println("Add a (mkart)Article (mkbrd)Board (mkdir)Directory (split)Splitting Line");
+								System.out.println("Move [source pos] [destination pos]: move source entry to the destination");
+								System.out.println("rm [pos] : remove indicated entry");
+								if(type == Entry.TYPE.BOARD){
+									System.out.println("Essence [source pos] [destination pos]: copy the source Article to destination Board in Essence Region");
+									System.out.println("transcript [source pos] [destination path]: transcript source Article to destination Baord");
+									System.out.println("focus [pos]: mark indicated Article");
+									System.out.println("z       : visit the Essence Region");
+								}
 								break;
 							default:
-								System.out.println("Error Type");
 								break;
 						}
+						System.out.println("cd [path]: move to indicated (relative) path; ");
+						System.out.println("ls       : list");
+						System.out.println("return   : move to the previos page");
+						System.out.println("exit     : logout and change user");
+						
 						help = false;
+						correct = true;
+						break;
 					}
 					/* parse input */
 					String cmd = input.nextLine();
@@ -75,26 +90,24 @@ public class Demo {
 					String[] path;
 					int search;
 					boolean back;
-					switch(cmds[0]){
+					String tmp1, tmp2;
+					switch(cmds[0].toLowerCase()){
 						case "h":
-						case "H":
 						case "help":
-						case "Help":
 							correct = false;
+							help = true;
 							break;
-						case "r":
-						case "R":
-						if(current != 0)
+						case "return":
+							if(current != 0)
 								current--;
 							break;
 						case "exit":
-						case "Exit":
 							exit = true;
 							break;
-						case "a":
-						case "A":
+						case "mkart":
 							if(type != Entry.TYPE.BOARD){
 								correct = false;
+								System.out.println("Not in a Board");
 								break;
 							}
 							if(cmds.length != 3){
@@ -109,10 +122,10 @@ public class Demo {
 							POOArticle art = new POOArticle(history[current].length(), title, user.getUserName(), content);
 							correct = ((POOBoard)history[current]).add(art);
 							break;
-						case "b":
-						case "B":
+						case "mkbrd":
 							if(type != Entry.TYPE.DIRECTORY){
 								correct = false;
+								System.out.println("Not in a Directory");
 								break;
 							}
 							
@@ -125,10 +138,10 @@ public class Demo {
 							POOBoard brd = new POOBoard(title);
 							correct = ((POODirectory)history[current]).add(brd);
 							break;
-						case "d":
-						case "D":
+						case "mkdir":
 							if(type != Entry.TYPE.DIRECTORY){
 								correct = false;
+								System.out.println("Not in a Directory");
 								break;
 							}
 								
@@ -141,27 +154,37 @@ public class Demo {
 							POODirectory dir = new POODirectory(title);
 							correct = ((POODirectory)history[current]).add(dir);
 							break;
-						case "e":
-						case "E":
+						case "essence":
 							if(type != Entry.TYPE.BOARD){
 								correct = false;
+								System.out.println("Not in a Board");
 								break;
 							}
 							
 							if(cmds.length != 3){
 								System.out.print("source\t\t: ");
-								src = input.nextInt();
+								tmp1 = input.nextLine();
 								System.out.print("destination\t: ");
-								dest = input.nextInt();
-								input.nextLine();
+								tmp2 = input.nextLine();
+								if(!tmp1.matches("-?[0-9]+?") || !tmp2.matches("-?[0-9]+?")){
+									System.out.println("source or destination is not an Integer");
+									correct = false;
+									break;
+								}
+								src = Integer.parseInt(tmp1);
+								dest = Integer.parseInt(tmp2);
 							}else{
+								if(!cmds[1].matches("-?[0-9]+?") || !cmds[2].matches("-?[0-9]+?")){
+									correct = false;
+									System.out.println("source or destination is not an Integer");
+									break;
+								}
 								src = Integer.parseInt(cmds[1]);
 								dest = Integer.parseInt(cmds[2]);
 							}
 							correct = ((POOBoard)history[current]).addEssence(src, dest);
 							break;
-						case "f":
-						case "F":
+						case "focus":
 							if(type != Entry.TYPE.BOARD){
 								correct = false;
 								break;
@@ -169,33 +192,52 @@ public class Demo {
 							
 							if(cmds.length != 2){
 								System.out.print("destination: ");
-								dest = input.nextInt();
-								input.nextLine();
+								tmp1 = input.nextLine();
+								if(!tmp1.matches("-?[0-9]+?")){
+									System.out.println("destination is not an Integer");
+									correct = false;
+									break;
+								}
+								dest = Integer.parseInt(tmp1);
 							}else{
+								if(!cmds[1].matches("-?[0-9]+?")){
+									correct = false;
+									System.out.println("destination is not an Integer");
+									break;
+								}
 								dest = Integer.parseInt(cmds[1]);
 							}
 							correct = ((POOBoard)history[current]).focus(dest);
 							break;
-						case "s":
-						case "S":
+						case "split":
 							if(type != Entry.TYPE.DIRECTORY){
+								System.out.println("Not in a Directory");
 								correct = false;
 								break;
 							}
 							correct = ((POODirectory)history[current]).add_split();
 							break;	
-						case "delete":
-						case "Delete":
+						case "rm":
 							if(type != Entry.TYPE.DIRECTORY && type != Entry.TYPE.BOARD){
 								correct = false;
 								break;
 							}
 							
 							if(cmds.length != 2){
-								System.out.print("destination\t: ");
-								dest = input.nextInt();
-								input.nextLine();
+								System.out.print("destination: ");
+								tmp1 = input.nextLine();
+								if(!tmp1.matches("-?[0-9]+?")){
+									System.out.println("destination is not an Integer");
+									correct = false;
+									break;
+								}
+								dest = Integer.parseInt(tmp1);
 							}else{
+								if(!cmds[1].matches("-?[0-9]+?")){
+									correct = false;
+									System.out.println("destination is not an Integer");
+									break;
+								}
 								dest = Integer.parseInt(cmds[1]);
 							}
 							if(type == Entry.TYPE.DIRECTORY){
@@ -204,7 +246,8 @@ public class Demo {
 								correct = ((POOBoard)history[current]).del(dest);
 							}
 							break;
-							
+						case "ls":
+							break;
 						case "cd":
 							if(cmds.length != 2){
 								System.out.print("path: ");
@@ -276,28 +319,40 @@ public class Demo {
 								if(!correct)
 									break;
 							}
-							if(!correct)
+							if(!correct){
+								System.out.println("Path not found");
 								break;
-							
+							}
 							for(int i = backpoint + 1; i <= search; i++){
 								history[i] = newpath[i];
 							}
 							current = search;
 							break;
 							
-						case "m":
-						case "M":
+						case "move":
 							if(type != Entry.TYPE.BOARD && type != Entry.TYPE.DIRECTORY){
+								System.out.println("Not in a Board or Directory");
 								correct = false;
 								break;
 							}
 							if(cmds.length != 3){
-								System.out.print("source(pos)\t: ");
-								src = input.nextInt();
+								System.out.print("source\t\t: ");
+								tmp1 = input.nextLine();
 								System.out.print("destination\t: ");
-								dest = input.nextInt();
-								input.nextLine();
+								tmp2 = input.nextLine();
+								if(!tmp1.matches("-?[0-9]+?") || !tmp2.matches("-?[0-9]+?")){
+									correct = false;
+									System.out.println("source or destination is not an Integer");
+									break;
+								}
+								src = Integer.parseInt(tmp1);
+								dest = Integer.parseInt(tmp2);
 							}else{
+								if(!cmds[1].matches("-?[0-9]+?") || !cmds[2].matches("-?[0-9]+?")){
+									correct = false;
+									System.out.println("source or destination is not an Integer");
+									break;
+								}
 								src = Integer.parseInt(cmds[1]);
 								dest = Integer.parseInt(cmds[2]);
 							}
@@ -307,20 +362,30 @@ public class Demo {
 								correct = ((POODirectory)history[current]).move(src, dest);
 							}
 							break;
-						case "t":
-						case "T":
+						case "transcript":
 							if(type != Entry.TYPE.BOARD && type != Entry.TYPE.DIRECTORY){
 								correct = false;
+								System.out.println("Not in a Board or Directory");
 								break;
 							}
 							
 							if(cmds.length != 3){
 								System.out.print("source(pos number)\t: ");
-								src = input.nextInt();
-								input.nextLine();
+								tmp1 = input.nextLine();
+								if(!tmp1.matches("-?[0-9]+?")){
+									correct = false;
+									System.out.println("source is not an Integer");
+									break;
+								}
+								src = Integer.parseInt(tmp1);
 								System.out.print("destination(path)\t: ");
 								content = input.nextLine();
 							}else{
+								if(!cmds[1].matches("-?[0-9]+?")){
+									correct = false;
+									System.out.println("source is not an Integer");
+									break;
+								}
 								src = Integer.parseInt(cmds[1]);
 								content = new String(cmds[2]);
 							}
@@ -367,15 +432,22 @@ public class Demo {
 								if(!correct)
 									break;
 							}
-							if(!correct)
+							if(!correct){
+								System.out.println("Path not found");
 								break;
+							}
+							if(unknown_entry instanceof POOBoard == false){
+								correct = false;
+								System.out.println("destination is not a Board");
+								break;
+							}
 							int id = ((POOBoard)unknown_entry).length();
 							POOArticle art2 = (POOArticle)((POOBoard)history[current]).get(src);
 							((POOBoard)unknown_entry).transcript(id, art2);
 							break;
 						case "z":
-						case "Z":
 							if(type != Entry.TYPE.BOARD || current + 1 >= 1024){
+								System.out.println("Not in a Board or Stack Overflow");
 								correct = false;
 								break;
 							}
@@ -387,13 +459,13 @@ public class Demo {
 							current++;
 							break;
 						case "arrow":
-						case "Arrow":
 							if(type != Entry.TYPE.ARTICLE){
+								System.out.println("Not in an Article");
 								correct = false;
 								break;
 							}
 							if(cmds.length != 2){
-								System.out.print("Content\t: ");
+								System.out.println("Content\t: ");
 								content = input.nextLine();
 							}else{
 								content = new String(cmds[1]);
@@ -401,13 +473,13 @@ public class Demo {
 							correct = ((POOArticle)history[current]).arrow(content);
 							break;
 						case "boo":
-						case "Boo":
 							if(type != Entry.TYPE.ARTICLE){
+								System.out.println("Not in an Article");
 								correct = false;
 								break;
 							}
 							if(cmds.length != 2){
-								System.out.print("Content\t: ");
+								System.out.println("Content\t: ");
 								content = input.nextLine();
 							}else{
 								content = new String(cmds[1]);
@@ -415,13 +487,13 @@ public class Demo {
 							correct = ((POOArticle)history[current]).boo(content);
 							break;
 						case "push":
-						case "Push":
 							if(type != Entry.TYPE.ARTICLE){
+								System.out.println("Not in an Article");
 								correct = false;
 								break;
 							}
 							if(cmds.length != 2){
-								System.out.print("Content\t: ");
+								System.out.println("Content\t: ");
 								content = input.nextLine();
 							}else{
 								content = new String(cmds[1]);
@@ -431,9 +503,7 @@ public class Demo {
 						default:
 							System.out.println("No Such Command");
 							correct = false;
-					}
-					if(!correct){
-						help = true;
+							help = true;
 					}
 				}
 			}
