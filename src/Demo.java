@@ -32,13 +32,13 @@ public class Demo {
 					/* printInfo */
 					switch(type){
 						case ARTICLE:
-							System.out.print("(arrow)Arrow (boo)Boo (push)Push (r)Return (e)Exit :");
+							System.out.print("(Arrow) (Boo) (Push) (r)Return (Exit) :");
 							break;
 						case BOARD:
-							System.out.print("(a)Add article (delete)Delete (r)Return (g)Goto (m)Move (z)Essence (e)Exit:");
+							System.out.print("Add a (a)Article (e)Essence or (Delete) (r)Return (g)Goto (m)Move (z)EssenceRegion (Exit):");
 							break;
 						case DIRECTORY:
-							System.out.print("(b)Add board (d)Add directory (s)Add splitting line (delete)Delete (g)Goto (m)Move (r)Return e)Exit:");
+							System.out.print("Add a (b)Board (d)Directory (s)Splitting line or (Delete) (g)Goto (m)Move (r)Return (Exit):");
 							break;
 						default:
 							System.out.println("Error Type");
@@ -54,8 +54,8 @@ public class Demo {
 						if(current != 0)
 								current--;
 							break;
-						case "e":
-						case "E":
+						case "exit":
+						case "Exit":
 							exit = true;
 							break;
 						case "a":
@@ -93,6 +93,20 @@ public class Demo {
 							title = input.nextLine();
 							POODirectory dir = new POODirectory(title);
 							((POODirectory)history[current]).add(dir);
+							break;
+						case "e":
+						case "E":
+							if(type != Entry.TYPE.BOARD){
+								correct = false;
+								break;
+							}
+							
+							System.out.print("source\t\t: ");
+							src = input.nextInt();
+							System.out.print("destination\t: ");
+							dest = input.nextInt();
+							input.nextLine();
+							((POOBoard)history[current]).addEssence(src, dest);
 							break;
 						case "s":
 						case "S":
@@ -143,9 +157,11 @@ public class Demo {
 							break;
 						case "m":
 						case "M":
-							if(type != Entry.TYPE.BOARD && type != Entry.TYPE.DIRECTORY)
+							if(type != Entry.TYPE.BOARD && type != Entry.TYPE.DIRECTORY){
 								correct = false;
-							System.out.print("source\t: ");
+								break;
+							}
+							System.out.print("source\t\t: ");
 							src = input.nextInt();
 							System.out.print("destination\t: ");
 							dest = input.nextInt();
@@ -155,6 +171,19 @@ public class Demo {
 							}else{
 								((POODirectory)history[current]).move(src, dest);
 							}
+							break;
+						case "z":
+						case "Z":
+							if(type != Entry.TYPE.BOARD || current + 1 >= 1024){
+								correct = false;
+								break;
+							}
+							history[current+1] = ((POOBoard)history[current]).get(POOBoard.ESSENCE);
+							if(history[current+1] == null || history[current+1].getType() != Entry.TYPE.DIRECTORY){
+								correct = false;
+								break;
+							}
+							current++;
 							break;
 						case "arrow":
 						case "Arrow":
@@ -187,7 +216,7 @@ public class Demo {
 							((POOArticle)history[current]).push(content);
 							break;
 						default:
-							System.out.println("Error Command");
+							System.out.println("No Such Command");
 							correct = false;
 					}
 				}

@@ -4,8 +4,9 @@ public class POOBoard extends Entry {
 	private String Name;
 	private POOArticle[] Articles;
 	private int Article_count;
+	private POODirectory Essence;
 	public static final int MAXART = 1024;
-	
+	public static final int ESSENCE = -1024;
 	
 	public POOBoard(String name){
 		super(Entry.TYPE.BOARD);
@@ -14,10 +15,11 @@ public class POOBoard extends Entry {
 		for(int i = 0; i < MAXART; i++)
 			Articles[i] = null;
 		Article_count = 0;
+		Essence = new POODirectory("Essence");
 	}
 	
 	public boolean add(POOArticle article){
-		if(Article_count > MAXART)
+		if(Article_count >= MAXART)
 			return false;
 		
 		Articles[Article_count] = article;
@@ -25,7 +27,24 @@ public class POOBoard extends Entry {
 		return true;
 	}
 	
+	public boolean addEssence(int pos, int pos_in_ess){
+		if(pos >= MAXART || pos < 0 || pos_in_ess >= Essence.length() || pos_in_ess < 0){
+			return false;
+		}else if(Essence.get(pos_in_ess) == null || Essence.get(pos_in_ess).getType() != Entry.TYPE.BOARD){
+			return false;
+		}
+			
+		POOBoard brd = (POOBoard)Essence.get(pos_in_ess);
+		int id = brd.length();
+		POOArticle art = Articles[pos].clone(id);
+		brd.add(art);
+		return true;
+	}
+	
 	public Entry get(int pos){
+		if(pos == ESSENCE)
+			return (Entry)Essence;
+		
 		if(pos >= Article_count || pos < 0)
 			return null;
 		

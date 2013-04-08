@@ -24,6 +24,28 @@ public class POOArticle extends Entry{
 		evaluation_messages = new String[MAXEVAL];
 		evaluation_type = new byte[MAXEVAL];
 	}
+	public POOArticle(int id){
+		super(Entry.TYPE.ARTICLE);
+		this.ID = id;
+		no_evaluation = 0;
+		evaluation_count = 0;
+		evaluation_messages = new String[MAXEVAL];
+		evaluation_type = new byte[MAXEVAL];
+	}
+	
+	public POOArticle clone(int id){
+		POOArticle art = new POOArticle(id);
+		art.title = this.title;
+		art.author = this.author;
+		art.content = this.content;
+		art.no_evaluation = this.no_evaluation;
+		art.evaluation_count = this.evaluation_count;
+		for(int i = 0; i < no_evaluation; i++){
+			art.evaluation_messages[i] = new String(this.evaluation_messages[i]);
+			art.evaluation_type[i] = this.evaluation_type[i];
+		}
+		return art;
+	}
 	
 	public boolean push(String message){
 		if(no_evaluation >= MAXEVAL)
@@ -96,5 +118,13 @@ public class POOArticle extends Entry{
 	
 	public String getTitle(){
 		return title;
+	}
+	
+	public String getContent(){
+		return content;
+	}
+	
+	public String getAuthor(){
+		return author;
 	}
 }
