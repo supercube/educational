@@ -85,6 +85,7 @@ public class POOBoard extends Entry {
 		POOArticle art2 = art.clone(id);
 		if(art2 == null)
 			return false;
+		art2.resetFocused();
 		return this.add(art2);
 	}
 	

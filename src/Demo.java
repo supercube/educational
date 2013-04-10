@@ -97,13 +97,16 @@ public class Demo {
 							correct = false;
 							help = true;
 							break;
+						
 						case "return":
 							if(current != 0)
 								current--;
 							break;
+						
 						case "exit":
 							exit = true;
 							break;
+						
 						case "mkart":
 							if(type != Entry.TYPE.BOARD){
 								correct = false;
@@ -122,6 +125,7 @@ public class Demo {
 							POOArticle art = new POOArticle(history[current].length(), title, user.getUserName(), content);
 							correct = ((POOBoard)history[current]).add(art);
 							break;
+						
 						case "mkbrd":
 							if(type != Entry.TYPE.DIRECTORY){
 								correct = false;
@@ -138,6 +142,7 @@ public class Demo {
 							POOBoard brd = new POOBoard(title);
 							correct = ((POODirectory)history[current]).add(brd);
 							break;
+						
 						case "mkdir":
 							if(type != Entry.TYPE.DIRECTORY){
 								correct = false;
@@ -154,6 +159,40 @@ public class Demo {
 							POODirectory dir = new POODirectory(title);
 							correct = ((POODirectory)history[current]).add(dir);
 							break;
+						
+						case "read":
+							if(type != Entry.TYPE.BOARD || current + 1 >= 1024){
+								correct = false;
+								System.out.println("Not in a Board or Stack Overflow");
+								break;
+							}
+							
+							if(cmds.length != 2){
+								System.out.print("destination: ");
+								tmp1 = input.nextLine();
+								if(!tmp1.matches("-?[0-9]+?")){
+									System.out.println("destination is not an Integer");
+									correct = false;
+									break;
+								}
+								dest = Integer.parseInt(tmp1);
+							}else{
+								if(!cmds[1].matches("-?[0-9]+?")){
+									correct = false;
+									System.out.println("destination is not an Integer");
+									break;
+								}
+								dest = Integer.parseInt(cmds[1]);
+							}
+							history[current+1] = ((POOBoard)history[current]).get(dest);
+							if(history[current+1] == null){
+								correct = false;
+								System.out.println("No such article");
+								break;
+							}
+							current++;
+							break;
+						
 						case "essence":
 							if(type != Entry.TYPE.BOARD){
 								correct = false;
@@ -184,9 +223,11 @@ public class Demo {
 							}
 							correct = ((POOBoard)history[current]).addEssence(src, dest);
 							break;
+						
 						case "focus":
 							if(type != Entry.TYPE.BOARD){
 								correct = false;
+								System.out.println("Not in a Board");
 								break;
 							}
 							
@@ -209,6 +250,7 @@ public class Demo {
 							}
 							correct = ((POOBoard)history[current]).focus(dest);
 							break;
+							
 						case "split":
 							if(type != Entry.TYPE.DIRECTORY){
 								System.out.println("Not in a Directory");
@@ -465,7 +507,7 @@ public class Demo {
 								break;
 							}
 							if(cmds.length != 2){
-								System.out.println("Content\t: ");
+								System.out.print("Content\t: ");
 								content = input.nextLine();
 							}else{
 								content = new String(cmds[1]);
@@ -479,7 +521,7 @@ public class Demo {
 								break;
 							}
 							if(cmds.length != 2){
-								System.out.println("Content\t: ");
+								System.out.print("Content\t: ");
 								content = input.nextLine();
 							}else{
 								content = new String(cmds[1]);
@@ -493,7 +535,7 @@ public class Demo {
 								break;
 							}
 							if(cmds.length != 2){
-								System.out.println("Content\t: ");
+								System.out.print("Content\t: ");
 								content = input.nextLine();
 							}else{
 								content = new String(cmds[1]);
