@@ -258,7 +258,8 @@ public class Demo {
 								break;
 							}
 							correct = ((POODirectory)history[current]).add_split();
-							break;	
+							break;
+						
 						case "rm":
 							if(type != Entry.TYPE.DIRECTORY && type != Entry.TYPE.BOARD){
 								correct = false;
@@ -288,8 +289,10 @@ public class Demo {
 								correct = ((POOBoard)history[current]).del(dest);
 							}
 							break;
+						
 						case "ls":
 							break;
+						
 						case "cd":
 							if(cmds.length != 2){
 								System.out.print("path: ");
@@ -404,6 +407,7 @@ public class Demo {
 								correct = ((POODirectory)history[current]).move(src, dest);
 							}
 							break;
+						
 						case "transcript":
 							if(type != Entry.TYPE.BOARD && type != Entry.TYPE.DIRECTORY){
 								correct = false;
@@ -487,6 +491,7 @@ public class Demo {
 							POOArticle art2 = (POOArticle)((POOBoard)history[current]).get(src);
 							((POOBoard)unknown_entry).transcript(id, art2);
 							break;
+						
 						case "z":
 							if(type != Entry.TYPE.BOARD || current + 1 >= 1024){
 								System.out.println("Not in a Board or Stack Overflow");
@@ -500,6 +505,7 @@ public class Demo {
 							}
 							current++;
 							break;
+						
 						case "arrow":
 							if(type != Entry.TYPE.ARTICLE){
 								System.out.println("Not in an Article");
@@ -514,6 +520,7 @@ public class Demo {
 							}
 							correct = ((POOArticle)history[current]).arrow(content);
 							break;
+						
 						case "boo":
 							if(type != Entry.TYPE.ARTICLE){
 								System.out.println("Not in an Article");
@@ -528,6 +535,7 @@ public class Demo {
 							}
 							correct = ((POOArticle)history[current]).boo(content);
 							break;
+						
 						case "push":
 							if(type != Entry.TYPE.ARTICLE){
 								System.out.println("Not in an Article");
@@ -542,6 +550,7 @@ public class Demo {
 							}
 							correct = ((POOArticle)history[current]).push(content);
 							break;
+						
 						default:
 							System.out.println("No Such Command");
 							correct = false;
